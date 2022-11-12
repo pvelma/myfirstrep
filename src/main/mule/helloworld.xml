@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="44bbf84e-5c62-485b-b76b-4d3f46febe82" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="helloworldFlow" doc:id="15d3b6cb-f52d-4ba0-81f0-407570bc05f9" >
+		<http:listener doc:name="Listener" doc:id="11b09818-c251-432f-973b-370de96263f2" config-ref="HTTP_Listener_config" path="/helloworld"/>
+		<ee:transform doc:name="Transform Message" doc:id="ee95b12b-068b-4006-abcc-52167a3b9bf5" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+var a=[
+	{
+		name : "Pooja",
+		id : 12,
+		org : "Infosys",
+		Maths : 20,
+		Physics : 25,
+		Chemistry : 30
+		},
+		{
+		name : "Teja",
+		id : 15,
+		org : "Fidilety",
+		Maths : 27,
+		Physics : 28,
+		Chemistry : 30
+		},
+		{
+		name : "Bharath",
+		id : 17,
+		org : "Infosys",
+		Maths : 20,
+		Physics : 30,
+		Chemistry : 24
+		}
+	
+]
+var b ={
+	"name" : "Pooja",
+	"Org" : "Infosys",
+	"Marks" : {"Maths":50,"Physics":60,"Chemistry":70}
+}
+
+fun checkresult(param0: String, param1: Number) = param0 ++ param1
+fun checkResult(marks) = if (marks>20) "PASS" else "FAIL"
+
+
+output application/json
+---
+a map{
+	"Employee name" : upper($.name),
+	"ID" : $.id,
+	"Organization" : $.org,
+	"Marks":
+	{
+		"Maths" : {marks:$.Maths,Status: checkResult($.Maths)},
+		"Physics" : {marks:$.Physics,Status: if ($.Physics > 20) "Pass" else "Fail"},
+		"Chemistry" : {marks:$.Chemistry,Status: if ($.Chemistry > 20) "Pass" else "Fail"},
+		"Total" : (($.Maths+$.Physics+$.Chemistry)/3) default 0 ,
+		"CGPA" : "",
+		"Check Result" : checkresult(20,"8")
+	}
+}
+/**
+ b mapObject ((value, key, index) -> {
+	"Value" : value,
+	"Key" : key,
+	"Index" : index
+	} 	
+)
+**/	
+
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message" doc:id="4fe0e7b4-9392-446b-8e10-7e045a3e5346" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+import modules::sample
+output application/json
+---
+sample::checkresult2("20",287767)]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message" doc:id="d7fdf87c-ec81-4997-8055-5e05f452a93a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message : Mule::lookup("helloworldFlow1",payload)
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message" doc:id="a5d3e1b8-5a3d-465d-9f68-fd2099ed22b1" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+var a =
+[
+ {
+name : "Sravan",
+id :123,
+"org" : "MuleSoft"
+ },
+ {
+name : "Mule",
+id :456,
+"org" : "XYZ"
+ },
+ {
+name : "Swag",
+id :786,
+"org" : "AWS"
+ }
+]
+var b = [
+ {
+name : "BSravan",
+id :123,
+"org" : "MuleSoft"
+ },
+ {
+name : "BMule",
+id :456,
+"org" : "XYZ"
+ },
+ {
+name : "BSwag",
+id :786,
+"org" : "AWS"
+ }
+] 
+var c = [
+ {
+name : "Sravan",
+id :123,
+"org" : ["MuleSoft" ,"AWS","microsoft"]
+ },
+ {
+name : "Mule",
+id :456,
+"org" : ["erf" ,"XYZ"]
+ },
+ {
+name : "Swag",
+id :786,
+"org" : ["WSD" ,"AWS"]
+ }
+] 
+output application/json
+---
+//flatten(a+b)
+c map ((value, index) -> {
+"CandidateName" : upper(value.name),
+"Company" : value.org map ( $ ++ "-" ++ value.name),
+"what is dollar dollar" : index
+}) ]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message" doc:id="d948b8bd-0566-4653-8eaa-c805ae402603" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+var a=[
+	{
+		"Orderid" : 234,
+		"Order name" : "Mule1",
+		"Size" : "L",
+		"Quantity" : 1,
+		"Price" : 20
+	},
+	{
+		"Orderid" : 456,
+		"Order name" : "Mule2",
+		"Size" : "L",
+		"Quantity" : 3,
+		"Price" : 30
+	}
+]
+output application/xml
+---
+//a reduce($)
+Orders:  Item @(id : "helo") : a
+	
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message" doc:id="2bd90986-124c-41e3-841a-30c88bc7f4f7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	(payload)
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="helloworldFlow1" doc:id="d2b92ad1-e529-4dd7-8f28-c66fdb05c9f4" >
+		<ee:transform doc:name="Transform Message" doc:id="2783ee0f-79a9-437e-acbb-1fdb24a1190e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA["Hello world" ++ (payload) as String ]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="helloworldFlow2" doc:id="cc375247-ab77-48ca-8b4b-24efaffa5b4b" >
+		<http:listener doc:name="Listener" doc:id="4ae62c13-629e-4097-ba19-2bb124240ab3" config-ref="HTTP_Listener_config" path="/DWL"/>
+		<ee:transform doc:name="Transform Message" doc:id="e1b31da0-4d37-46ca-a0aa-8aea6627637f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+import modules::checkresult
+output application/json
+fun statuscheck(marks) = if (marks>20) "PASS" else "FAIL"
+fun unique(name, id) = name ++ "-" ++ id
+
+---
+
+	payload map {
+		"Name" : $.name,
+		"Marks" : $.marks default 0,
+		"Org" : $.org,
+		"Status" : statuscheck($.marks default 0), 
+		"Uniqueid" : checkresult::uniqueid($.name,$.org)
+	} 
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="helloworldFlow3" doc:id="e3c94261-3539-434e-9ef7-cb0b79dccd6b" >
+		<http:listener doc:name="Listener" doc:id="f187ceff-9b50-4f4f-981b-60ce914fdded" config-ref="HTTP_Listener_config" path="/sravan"/>
+		<ee:transform doc:name="Transform Message" doc:id="02b30907-61af-4703-acf7-612aa354dae5" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var a = (payload pluck ((value, key, index) -> value.*Item) reduce($)
+)
+---
+a map(item,index)->
+{
+	"Index" : index,
+	"Orderid" : item.Order.@id,
+	"name" : item.Ordername,
+	"price" : item.Price * item.Quantity
+}
+
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="samplexml" format="xml">
+      <types:example format="xml" element="Orders" location="example/samplexml.xml"/>
+    </types:type>
+    <types:type name="Prob2JSON" format="json">
+      <types:shape format="weave" example="example/prob2JSON.json"><![CDATA[%dw 2.0
+
+type Prob2JSON = Array<{|  name: String,   marks: Number {"typeId": "int"},   org: String|}> {"example": "[{\\\"name\\\":\\\"Sravan\\\",\\\"marks\\\":13,\\\"org\\\":\\\"Mulesoft\\\"},{\\\"name\\\":\\\"Mule\\\",\\\"org\\\":\\\"XYZ\\\"},{\\\"name\\\":\\\"Swag\\\",\\\"marks\\\":80,\\\"org\\\":\\\"AWS\\\"},{\\\"name\\\":\\\"Amit\\\",\\\"org\\\":\\\"AWS\\\"}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#02b30907-61af-4703-acf7-612aa354dae5">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="samplexml"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#e1b31da0-4d37-46ca-a0aa-8aea6627637f">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="Prob2JSON"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

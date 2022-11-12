@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Orders>
+  <Item>
+    <Order id="234"/>
+    <Ordername>Mule1</Ordername>
+    <Size>L</Size>
+    <Quantity>1</Quantity>
+    <Price>20</Price>
+  </Item>
+  <Item>
+    <Order id= "456"/>
+    <Ordername>Mule2</Ordername>
+    <Size>L</Size>
+    <Quantity>3</Quantity>
+    <Price>30</Price>
+  </Item>
+</Orders>

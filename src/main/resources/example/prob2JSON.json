@@ -1,0 +1,20 @@
+[ 
+ { 
+"name" : "Sravan", 
+"marks" :13,
+"org" : "Mulesoft"
+ }, 
+ { 
+"name" : "Mule",
+"org" : "XYZ"
+ }, 
+ { 
+"name" : "Swag", 
+"marks" :80,
+"org" : "AWS"
+ }, 
+ { 
+"name" : "Amit",
+"org" : "AWS"
+ } 
+]
